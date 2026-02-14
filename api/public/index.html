@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free AI Search Audit — Is AI Finding Your Brand?</title>
+<meta name="description" content="Find out if AI search engines are recommending your premium food & beverage brand — or if you're invisible. Free instant audit.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c8a97e;
+    --gold-dim: rgba(200,169,126,0.15);
+    --gold-glow: rgba(200,169,126,0.3);
+    --bg: #0a0a0a;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.06);
+    --text: #e8e4de;
+    --text-dim: #8a8580;
+    --text-muted: #555;
+    --green: #4ade80;
+    --red: #ef4444;
+    --font-body: 'DM Sans', sans-serif;
+    --font-display: 'Playfair Display', serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(165deg, #0a0a0a 0%, #141414 50%, #1a1510 100%);
+    font-family: var(--font-body);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    opacity: 0.03;
+    background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
+    pointer-events: none; z-index: 0;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 48px 24px; position: relative; z-index: 1; }
+
+  .tag {
+    display: inline-block; padding: 4px 14px;
+    border: 1px solid var(--gold-dim); border-radius: 20px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 600; line-height: 1.15;
+    color: #fff; margin: 20px 0 14px;
+  }
+  h1 span { color: var(--gold); }
+
+  .subtitle { font-size: 16px; color: var(--text-dim); max-width: 540px; margin: 0 auto; line-height: 1.6; }
+
+  .section-label {
+    display: block; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 8px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid rgba(200,169,126,0.12);
+    border-radius: 16px; padding: 36px 32px; margin-bottom: 32px;
+  }
+
+  .field { margin-bottom: 24px; }
+
+  input[type="text"], input[type="email"] {
+    width: 100%; padding: 14px 18px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--gold-dim); border-radius: 10px;
+    color: var(--text); font-size: 16px;
+    font-family: var(--font-body);
+    transition: all 0.2s ease;
+  }
+  input:focus {
+    outline: none; border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,169,126,0.15);
+  }
+
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+
+  .chip {
+    padding: 7px 14px; border-radius: 20px; font-size: 13px;
+    color: #c4beb6; cursor: pointer; transition: all 0.2s ease;
+    border: 1px solid rgba(200,169,126,0.2);
+    background: rgba(200,169,126,0.05); white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--gold); background: rgba(200,169,126,0.12); }
+  .chip.active { border-color: var(--gold); background: rgba(200,169,126,0.2); color: var(--gold); }
+
+  .btn-primary {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, #c8a97e, #a3845a);
+    border: none; border-radius: 10px;
+    color: #0a0a0a; font-size: 15px; font-weight: 600;
+    font-family: var(--font-body); cursor: pointer;
+    transition: all 0.3s ease; letter-spacing: 0.02em;
+  }
+  .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 30px var(--gold-glow); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; background: var(--gold-dim); color: var(--gold); }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 8px 16px;
+    color: var(--text-dim); font-size: 13px;
+    cursor: pointer; font-family: var(--font-body);
+  }
+
+  /* Progress */
+  .step {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; margin-bottom: 6px;
+    border-radius: 10px; border: 1px solid transparent;
+    transition: all 0.3s ease;
+  }
+  .step.active { background: rgba(200,169,126,0.08); border-color: rgba(200,169,126,0.2); animation: borderGlow 2s ease infinite; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; flex-shrink: 0;
+  }
+  .step-num.done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .step-num.active { background: var(--gold-dim); color: var(--gold); }
+  .step-num.pending { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+  .dots { margin-left: auto; display: flex; gap: 3px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 1.4s ease-in-out infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Email gate */
+  .email-gate {
+    text-align: center; padding: 48px 32px;
+    background: linear-gradient(135deg, rgba(200,169,126,0.08), rgba(200,169,126,0.02));
+    border: 1px solid rgba(200,169,126,0.2);
+    border-radius: 16px; margin-bottom: 32px;
+    animation: fadeUp 0.5s ease;
+  }
+  .email-gate h2 {
+    font-family: var(--font-display); font-size: 24px;
+    font-weight: 600; color: #fff; margin-bottom: 12px;
+  }
+  .email-gate p { font-size: 14px; color: var(--text-dim); margin-bottom: 24px; line-height: 1.5; }
+  .email-gate input { max-width: 360px; margin: 0 auto 12px; display: block; }
+  .email-gate .btn-primary { max-width: 360px; margin: 0 auto; }
+
+  /* Report */
+  .report-header {
+    background: linear-gradient(135deg, rgba(200,169,126,0.08), rgba(200,169,126,0.02));
+    border: 1px solid rgba(200,169,126,0.2);
+    border-radius: 16px; padding: 36px 32px;
+    margin-bottom: 24px; text-align: center;
+    animation: fadeUp 0.6s ease;
+  }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .score-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+    animation: fadeUp 0.5s ease forwards; opacity: 0;
+  }
+  .rec-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; margin-bottom: 24px; }
+  .rec-card { padding: 16px 18px; margin-bottom: 10px; border-radius: 10px; animation: fadeUp 0.5s ease forwards; opacity: 0; }
+  .rec-card.critical { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); }
+  .rec-card.high { background: rgba(200,169,126,0.06); border: 1px solid rgba(200,169,126,0.15); }
+  .rec-card.medium { background: rgba(255,255,255,0.02); border: 1px solid var(--border); }
+  .rec-badge { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .rec-badge.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+  .rec-badge.high { background: var(--gold-dim); color: var(--gold); }
+  .rec-badge.medium { background: rgba(255,255,255,0.08); color: var(--text-dim); }
+
+  .cta-card {
+    text-align: center; padding: 32px 24px;
+    background: linear-gradient(135deg, rgba(200,169,126,0.06), rgba(200,169,126,0.02));
+    border: 1px solid rgba(200,169,126,0.15);
+    border-radius: 12px;
+    animation: fadeUp 0.6s ease 0.5s forwards; opacity: 0;
+  }
+  .cta-btn {
+    display: inline-block; padding: 12px 32px;
+    background: linear-gradient(135deg, #c8a97e, #a3845a);
+    border-radius: 8px; color: #0a0a0a;
+    font-size: 14px; font-weight: 600;
+    text-decoration: none; letter-spacing: 0.02em;
+  }
+
+  .footer { text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.04); font-size: 12px; color: #444; }
+  .error { color: var(--red); font-size: 13px; margin-top: 12px; }
+  .hidden { display: none; }
+
+  .social-proof {
+    display: flex; gap: 24px; justify-content: center; margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .proof-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .proof-item span { color: var(--gold); font-weight: 600; }
+
+  @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes borderGlow { 0%, 100% { border-color: rgba(200,169,126,0.15); } 50% { border-color: rgba(200,169,126,0.4); } }
+</style>
+</head>
+<body>
+
+<div class="container" id="app">
+  <!-- Header -->
+  <div style="text-align:center; margin-bottom:48px;">
+    <div class="tag">Free AI Visibility Audit</div>
+    <h1>Is AI Search Finding<br><span>Your Brand?</span></h1>
+    <p class="subtitle">When consumers ask ChatGPT, Claude, or Perplexity for the best in your category, are you in the answer — or invisible? Find out in 60 seconds.</p>
+    <div class="social-proof">
+      <div class="proof-item">🔍 <span>5</span> AI dimensions analyzed</div>
+      <div class="proof-item">📊 Scored <span>0–100</span> with recommendations</div>
+      <div class="proof-item">⚡ Results in <span>~60 seconds</span></div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="card" id="inputSection">
+    <div class="field">
+      <label class="section-label">Your Brand Name</label>
+      <input type="text" id="brandName" placeholder="e.g. Graza, Fly By Jing, Ghia">
+    </div>
+    <div class="field">
+      <label class="section-label">Category</label>
+      <div class="chip-grid" id="chipGrid"></div>
+      <input type="text" id="customCategory" placeholder="Or type your category...">
+    </div>
+    <div class="field">
+      <label class="section-label">Your Name</label>
+      <input type="text" id="userName" placeholder="First name">
+    </div>
+    <div id="errorMsg" class="error hidden"></div>
+    <button class="btn-primary" id="runBtn" onclick="runAudit()">Audit My Brand's AI Visibility</button>
+    <p style="font-size:11px; color:#444; text-align:center; margin-top:12px;">Powered by live AI search analysis · Takes about 60 seconds</p>
+  </div>
+
+  <!-- Progress -->
+  <div id="progress" class="hidden"></div>
+
+  <!-- Email Gate -->
+  <div id="emailGate" class="hidden"></div>
+
+  <!-- Report -->
+  <div id="report" class="hidden"></div>
+</div>
+
+<script>
+const CATEGORIES = [
+  "Premium olive oil", "Artisan hot sauce", "Specialty coffee",
+  "Natural wine", "Craft spirits", "Artisan chocolate",
+  "Specialty condiments", "Premium tea", "Gourmet snacks",
+  "Farm-to-table restaurant", "Chef-driven restaurant group", "Specialty bakery"
+];
+
+const QUERIES = [
+  { id: "discovery", label: "Brand Discovery", desc: "Can AI find this brand when consumers search?",
+    tpl: (b,c) => `Search the web for "${b}" in the ${c} space. What do you find about this brand? Summarize their online presence, what they're known for, and how prominently they appear. If you find very little, say so clearly. Respond in JSON only, no markdown, no backticks: {"found": true/false, "summary": "2-3 sentences", "sources_found": ["list of domains/platforms where brand appeared"], "prominence": "high/medium/low/not_found"}` },
+  { id: "category", label: "Category Authority", desc: "Is this brand recommended when consumers ask about the category?",
+    tpl: (b,c) => `Search the web for the best ${c} brands. List the top brands that come up most prominently. Is "${b}" among them? Respond in JSON only, no markdown, no backticks: {"brand_mentioned": true/false, "top_brands_found": ["list of top 5-8 brands found"], "brand_position": "top_tier/mentioned/absent", "category_leaders": "1-2 sentence summary of who dominates"}` },
+  { id: "reputation", label: "Brand Sentiment & Reviews", desc: "What does AI surface about brand quality and reputation?",
+    tpl: (b,c) => `Search the web for reviews, press coverage, and reputation of "${b}" (${c}). What is the general sentiment? Are there notable press mentions, awards, or reviews? Respond in JSON only, no markdown, no backticks: {"sentiment": "positive/mixed/negative/insufficient_data", "notable_mentions": ["list any press, awards, notable reviews"], "review_presence": "strong/moderate/weak/none", "summary": "2-3 sentences about overall reputation found online"}` },
+  { id: "competitors", label: "Competitive Landscape", desc: "How does AI position this brand relative to competitors?",
+    tpl: (b,c) => `Search the web and compare "${b}" to its competitors in the ${c} space. Who are the main competitors? How does ${b} differentiate? Respond in JSON only, no markdown, no backticks: {"main_competitors": ["list 3-5 competitors found"], "differentiation": "what makes the brand unique or how it's positioned", "competitive_position": "leader/competitive/underdog/invisible", "summary": "2-3 sentences"}` },
+  { id: "purchase", label: "Purchase Intent Capture", desc: "Does AI recommend this brand when consumers want to buy?",
+    tpl: (b,c) => `Search the web: where can I buy the best ${c}? What brands and retailers come up? Is "${b}" recommended as a purchase option? Respond in JSON only, no markdown, no backticks: {"brand_recommended": true/false, "recommended_brands": ["brands that come up for purchase"], "purchase_channels_found": ["any retail/DTC channels found for the brand"], "buy_intent_visibility": "high/medium/low/none", "summary": "2-3 sentences"}` }
+];
+
+let selectedCategory = '';
+let results = {};
+let auditBrand = '';
+let auditCat = '';
+let auditName = '';
+
+window.addEventListener('DOMContentLoaded', renderChips);
+
+function renderChips() {
+  const grid = document.getElementById('chipGrid');
+  grid.innerHTML = CATEGORIES.map(c =>
+    `<span class="chip${selectedCategory === c ? ' active' : ''}" onclick="selectCat('${c}')">${c}</span>`
+  ).join('');
+}
+function selectCat(c) { selectedCategory = c; document.getElementById('customCategory').value = ''; renderChips(); }
+
+// Scoring (same as consultant version)
+function calcScore(id, data) {
+  if (!data || data.error) return 0;
+  let s = 0;
+  try {
+    switch(id) {
+      case 'discovery':
+        if (data.found) s += 40;
+        if (data.prominence === 'high') s += 40; else if (data.prominence === 'medium') s += 25; else if (data.prominence === 'low') s += 10;
+        if ((data.sources_found||[]).length > 3) s += 20; else if ((data.sources_found||[]).length > 1) s += 10;
+        break;
+      case 'category':
+        if (data.brand_mentioned) s += 35;
+        if (data.brand_position === 'top_tier') s += 45; else if (data.brand_position === 'mentioned') s += 20;
+        if ((data.top_brands_found||[]).length > 0) s += 20;
+        break;
+      case 'reputation':
+        if (data.sentiment === 'positive') s += 40; else if (data.sentiment === 'mixed') s += 20;
+        if (data.review_presence === 'strong') s += 35; else if (data.review_presence === 'moderate') s += 20; else if (data.review_presence === 'weak') s += 10;
+        if ((data.notable_mentions||[]).length > 2) s += 25; else if ((data.notable_mentions||[]).length > 0) s += 15;
+        break;
+      case 'competitors':
+        if (data.competitive_position === 'leader') s += 50; else if (data.competitive_position === 'competitive') s += 35; else if (data.competitive_position === 'underdog') s += 15;
+        if (data.differentiation && data.differentiation.length > 20) s += 30;
+        if ((data.main_competitors||[]).length > 0) s += 20;
+        break;
+      case 'purchase':
+        if (data.brand_recommended) s += 40;
+        if (data.buy_intent_visibility === 'high') s += 35; else if (data.buy_intent_visibility === 'medium') s += 20; else if (data.buy_intent_visibility === 'low') s += 10;
+        if ((data.purchase_channels_found||[]).length > 1) s += 25; else if ((data.purchase_channels_found||[]).length > 0) s += 15;
+        break;
+    }
+  } catch(e) {}
+  return Math.min(100, s);
+}
+
+function scoreColor(s) { return s >= 70 ? '#4ade80' : s >= 40 ? '#c8a97e' : '#ef4444'; }
+function gradeInfo(s) {
+  if (s >= 80) return { g: 'A', l: 'Excellent AI Visibility' };
+  if (s >= 65) return { g: 'B', l: 'Good — Room to Grow' };
+  if (s >= 45) return { g: 'C', l: 'Moderate — Significant Gaps' };
+  if (s >= 25) return { g: 'D', l: 'Weak — Major Blind Spots' };
+  return { g: 'F', l: 'Invisible to AI Search' };
+}
+
+function svgRing(score, size, sw, color) {
+  const r = (size - sw) / 2, c = 2 * Math.PI * r, off = c - (score / 100) * c;
+  return `<svg width="${size}" height="${size}" style="transform:rotate(-90deg)">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="${sw}"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease-out"/>
+    <text x="${size/2}" y="${size/2}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${size*0.28}" font-weight="700" font-family="'DM Sans',sans-serif" style="transform:rotate(90deg);transform-origin:center">${score}</text>
+  </svg>`;
+}
+
+async function callAPI(prompt) {
+  const resp = await fetch('/api/audit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt })
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data.text;
+}
+
+async function runAudit() {
+  auditBrand = document.getElementById('brandName').value.trim();
+  const custom = document.getElementById('customCategory').value.trim();
+  auditCat = custom || selectedCategory;
+  auditName = document.getElementById('userName').value.trim();
+
+  if (!auditBrand || !auditCat) {
+    document.getElementById('errorMsg').textContent = 'Please enter your brand name and select or type a category.';
+    document.getElementById('errorMsg').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('errorMsg').classList.add('hidden');
+  document.getElementById('inputSection').style.display = 'none';
+  document.getElementById('report').classList.add('hidden');
+  document.getElementById('emailGate').classList.add('hidden');
+
+  results = {};
+  const prog = document.getElementById('progress');
+  prog.classList.remove('hidden');
+
+  function renderProg(idx) {
+    prog.innerHTML = QUERIES.map((q, i) => {
+      const done = results[q.id] !== undefined;
+      const active = i === idx && !done;
+      return `<div class="step ${active?'active':''}">
+        <div class="step-num ${done?'done':active?'active':'pending'}">${done?'✓':i+1}</div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:${done?'var(--text-dim)':active?'var(--text)':'var(--text-muted)'}">${q.label}</div>
+          <div style="font-size:12px;color:${active?'var(--text-dim)':'#444'}">${q.desc}</div>
+        </div>
+        ${active?'<div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>':''}
+      </div>`;
+    }).join('');
+  }
+
+  for (let i = 0; i < QUERIES.length; i++) {
+    renderProg(i);
+    const q = QUERIES[i];
+    try {
+      const text = await callAPI(q.tpl(auditBrand, auditCat));
+      const cleaned = text.replace(/```json|```/g, '').trim();
+      results[q.id] = JSON.parse(cleaned);
+    } catch(e) {
+      results[q.id] = { error: true, raw: e.message };
+    }
+    renderProg(i);
+  }
+
+  prog.classList.add('hidden');
+  showEmailGate();
+}
+
+function showEmailGate() {
+  const overall = Math.round(QUERIES.reduce((s,q) => s + calcScore(q.id, results[q.id]), 0) / QUERIES.length);
+  const gi = gradeInfo(overall);
+  const gate = document.getElementById('emailGate');
+  gate.classList.remove('hidden');
+  gate.innerHTML = `<div class="email-gate">
+    <div style="margin-bottom:20px">${svgRing(overall, 100, 8, scoreColor(overall))}</div>
+    <h2>${auditName ? auditName + ', your' : 'Your'} brand scored a <span style="color:${scoreColor(overall)}">${gi.g}</span></h2>
+    <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across 5 dimensions and specific recommendations to improve your AI search presence.</p>
+    <input type="email" id="gateEmail" placeholder="Enter your email to see your full report">
+    <button class="btn-primary" onclick="unlockReport()" style="max-width:360px;margin:0 auto">See My Full Report</button>
+    <p style="font-size:11px;color:#444;margin-top:12px">We'll send you a copy too. No spam, ever.</p>
+  </div>`;
+}
+
+function unlockReport() {
+  const email = document.getElementById('gateEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  // In production, you'd POST this to your CRM/email service here
+  console.log('LEAD CAPTURED:', { brand: auditBrand, category: auditCat, name: auditName, email: email });
+
+  // You can add a fetch call here to send to your email service:
+  // fetch('/api/capture-lead', { method: 'POST', body: JSON.stringify({ brand: auditBrand, category: auditCat, name: auditName, email }) });
+
+  document.getElementById('emailGate').classList.add('hidden');
+  renderReport();
+}
+
+function genRecs() {
+  const recs = [];
+  const sc = {};
+  for (const q of QUERIES) sc[q.id] = calcScore(q.id, results[q.id]);
+  if (sc.discovery < 40) recs.push({ p:'Critical', a:'Brand Discovery', t:'Your brand is nearly invisible to AI search. You need a foundational content strategy — consistent publishing, structured data, and presence across platforms AI models reference.' });
+  else if (sc.discovery < 70) recs.push({ p:'High', a:'Brand Discovery', t:'AI can find you, but your presence is thin. Strengthen your content footprint with brand storytelling, founder narratives, and product-specific pages.' });
+  if (sc.category < 40) recs.push({ p:'Critical', a:'Category Authority', t:"When consumers ask AI for the best in your category, you're not in the conversation. You need strategic content positioning you as a category leader." });
+  else if (sc.category < 70) recs.push({ p:'High', a:'Category Authority', t:"You appear in some category conversations but aren't a top recommendation. Increase authority through press placements and category leadership content." });
+  if (sc.reputation < 40) recs.push({ p:'High', a:'Reputation & Reviews', t:'AI finds little about your reputation. Cultivate reviews, seek press coverage, and build third-party validation AI can reference.' });
+  if (sc.competitors < 40) recs.push({ p:'Medium', a:'Competitive Position', t:"AI doesn't understand what makes you different. Sharpen your differentiation across all platforms." });
+  if (sc.purchase < 40) recs.push({ p:'Critical', a:'Purchase Visibility', t:"When consumers are ready to buy, AI isn't sending them to you. Ensure your channels are well-indexed and connected to purchase intent." });
+  if (recs.length === 0) recs.push({ p:'Optimize', a:'Overall', t:'Your AI visibility is strong. Focus on maintaining presence and expanding into adjacent categories.' });
+  return recs;
+}
+
+function renderReport() {
+  const rep = document.getElementById('report');
+  rep.classList.remove('hidden');
+  const overall = Math.round(QUERIES.reduce((s,q) => s + calcScore(q.id, results[q.id]), 0) / QUERIES.length);
+  const gi = gradeInfo(overall);
+  const recs = genRecs();
+  const today = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+
+  let h = '';
+
+  // Header
+  h += `<div class="report-header">
+    <div class="section-label" style="margin-bottom:4px">AI Visibility Report</div>
+    <h2 style="font-family:var(--font-display);font-size:28px;font-weight:600;color:#fff;margin:0 0 24px">${auditBrand}</h2>
+    <div style="display:flex;justify-content:center;align-items:center;gap:32px;margin-bottom:16px">
+      ${svgRing(overall, 120, 10, scoreColor(overall))}
+      <div style="text-align:left">
+        <div style="font-size:48px;font-weight:700;font-family:var(--font-display);line-height:1;color:${scoreColor(overall)}">${gi.g}</div>
+        <div style="font-size:14px;color:var(--text-dim);margin-top:4px">${gi.l}</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#666;margin-top:12px">${auditCat} · Audited ${today}</div>
+  </div>`;
+
+  // Score cards
+  h += '<div class="score-grid">';
+  QUERIES.forEach((q, i) => {
+    const sc = calcScore(q.id, results[q.id]);
+    const d = results[q.id];
+    const sum = d && !d.error ? (d.summary || d.category_leaders || 'Analysis complete.') : '';
+    h += `<div class="score-card" style="animation-delay:${i*0.1}s">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+        <div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px">${q.label}</div>
+        <div style="font-size:11px;color:#666">${q.desc}</div></div>
+        ${svgRing(sc, 48, 4, scoreColor(sc))}
+      </div>
+      ${sum ? `<div style="font-size:13px;color:var(--text-dim);line-height:1.5">${sum}</div>` : ''}
+      ${d&&d.error ? '<div style="font-size:12px;color:var(--red)">Unable to analyze.</div>' : ''}
+    </div>`;
+  });
+  h += '</div>';
+
+  // Recs
+  h += '<div class="rec-panel"><h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 20px;color:#fff">Recommendations</h3>';
+  recs.forEach((r, i) => {
+    const cls = r.p.toLowerCase();
+    h += `<div class="rec-card ${cls}" style="animation-delay:${i*0.12}s">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="rec-badge ${cls}">${r.p}</span>
+        <span style="font-size:13px;font-weight:600;color:var(--text)">${r.a}</span>
+      </div>
+      <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin:0">${r.t}</p>
+    </div>`;
+  });
+  h += '</div>';
+
+  // CTA
+  h += `<div class="cta-card">
+    <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;margin-bottom:8px">Want to fix this?</div>
+    <p style="font-size:14px;color:var(--text-dim);margin:0 0 20px;line-height:1.5">I help premium F&B brands become the answer when AI recommends products in their category. Let's talk about a strategy tailored to ${auditBrand}.</p>
+    <a href="https://allykiel.carrd.co" target="_blank" class="cta-btn">Book a Free Strategy Call →</a>
+  </div>`;
+
+  h += `<div class="footer">AI Search Audit by Ally Kiel · allykiel.carrd.co</div>`;
+  rep.innerHTML = h;
+}
+</script>
+</body>
+</html>
